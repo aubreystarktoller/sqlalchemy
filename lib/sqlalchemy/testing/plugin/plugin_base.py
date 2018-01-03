@@ -98,6 +98,9 @@ def setup_options(make_option):
     make_option("--force-write-profiles", action="store_true",
                 dest="force_write_profiles", default=False,
                 help="Unconditionally write/update profiling data.")
+    make_option("--locale",
+                dest="locale", default="en_US",
+                help="Set locale")
 
 
 def configure_follower(follower_ident):

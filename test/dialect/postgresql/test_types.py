@@ -2,7 +2,7 @@
 from sqlalchemy.testing.assertions import eq_, assert_raises, \
     assert_raises_message, is_, AssertsExecutionResults, \
     AssertsCompiledSQL, ComparesTables
-from sqlalchemy.testing import engines, fixtures
+from sqlalchemy.testing import engines, fixtures, config
 from sqlalchemy import testing
 from sqlalchemy.sql import sqltypes
 import datetime
@@ -838,8 +838,8 @@ class ArrayTest(AssertsCompiledSQL, fixtures.TestBase):
 
     def test_array_type_render_str_collate(self):
         self.assert_compile(
-            postgresql.ARRAY(Unicode(30, collation="en_US")),
-            'VARCHAR(30)[] COLLATE "en_US"'
+            postgresql.ARRAY(Unicode(30, collation=config.options.locale)),
+            'VARCHAR(30)[] COLLATE "%s"' % config.options.locale
         )
 
     def test_array_type_render_str_multidim(self):
@@ -855,13 +855,13 @@ class ArrayTest(AssertsCompiledSQL, fixtures.TestBase):
 
     def test_array_type_render_str_collate_multidim(self):
         self.assert_compile(
-            postgresql.ARRAY(Unicode(30, collation="en_US"), dimensions=2),
-            'VARCHAR(30)[][] COLLATE "en_US"'
+            postgresql.ARRAY(Unicode(30, collation=config.options.locale), dimensions=2),
+            'VARCHAR(30)[][] COLLATE "%s"' % config.options.locale
         )
 
         self.assert_compile(
-            postgresql.ARRAY(Unicode(30, collation="en_US"), dimensions=3),
-            'VARCHAR(30)[][][] COLLATE "en_US"'
+            postgresql.ARRAY(Unicode(30, collation=config.options.locale), dimensions=3),
+            'VARCHAR(30)[][][] COLLATE "%s"' % config.options.locale
         )
 
 
@@ -1106,7 +1106,7 @@ class ArrayRoundTripTest(object):
 
         t = Table(
             't', m, Column('data',
-                           sqltypes.ARRAY(String(50, collation="en_US")))
+                           sqltypes.ARRAY(String(50, collation=config.options.locale)))
         )
 
         t.create()
